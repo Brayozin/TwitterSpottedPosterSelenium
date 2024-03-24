@@ -32,6 +32,7 @@ class Twitterbot:
         self.password = password
         # initializing chrome options
         chrome_options = Options()
+        chrome_options.add_argument("user-data-dir=userData")
 
         # adding the path to the chrome driver and
         # integrating chrome_options with the bot
@@ -53,6 +54,11 @@ class Twitterbot:
         arguments[0].dispatchEvent(event)
         ''',
             el)
+        
+    def get(self, url):
+        self.bot.get(url)
+        time.sleep(1)
+    
 
     def login(self):
         """
@@ -62,7 +68,7 @@ class Twitterbot:
 
         bot = self.bot
         # fetches the login page
-        bot.get('https://twitter.com/i/flow/login')
+        bot.get('https://twitter.com')
         # adjust the sleep time according to your internet speed
         time.sleep(10)
 
@@ -92,7 +98,7 @@ class Twitterbot:
         # executes RETURN key action
         email.send_keys(Keys.RETURN)
 
-        time.sleep(1)
+        time.sleep(30)
         password = bot.find_element_by_xpath(
             '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input'
         )
@@ -153,6 +159,9 @@ class Twitterbot:
         postButton.click()
 
         time.sleep(1)
+        
+    def scroll_to_element(self, element):
+        self.bot.execute_script("arguments[0].scrollIntoView(true);", element)
 
     def post_thread(self, thread):
         logger.info("post thread:")
@@ -203,11 +212,16 @@ class Twitterbot:
         for text in thread:
             logger.info("text-%s: %s", text_number, text)
             text_number += 1
-            # get the text area
-            bot.switch_to.active_element.click()
+
+            
+            time.sleep(1)
+            bot.switch_to.active_element
+            self.scroll_to_element(bot.switch_to.active_element)
             time.sleep(1)
             # sends the text to the text area
             if text != thread[-1]:
+                #scrool down (inside modal) using arrow keys
+                time.sleep(0.5)
                 text = text + "+"
                 textArea = bot.switch_to.active_element
                 self.paste_content( textArea, text)
@@ -225,6 +239,7 @@ class Twitterbot:
                 threadButton.click()
                 time.sleep(1)
             else:
+                time.sleep(0.5)
                 textArea = bot.switch_to.active_element
                 text = text + " "
                 self.paste_content( textArea, text)

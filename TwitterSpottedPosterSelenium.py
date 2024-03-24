@@ -54,7 +54,7 @@ class TwitterSpottedPosterSelenium(object):
         self.TWITTER_PASSWORD = password
 
         self.bot = tb.Twitterbot(self.TWITTER_USERNAME, self.TWITTER_PASSWORD)
-        self.bot.login()
+        self.bot.get('https://twitter.com')
         logger.info("Logged on twitter using Selenium")
     
     def post_tweet(self, text):

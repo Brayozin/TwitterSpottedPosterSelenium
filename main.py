@@ -12,7 +12,8 @@ credentials = secrets.get_credentials()
 # initialize the bot with your credentials
 bot = tb.Twitterbot(credentials['email'], credentials['password'])
 # logging in
-bot.login()
+# bot.login()
+bot.get('https://twitter.com')
 
 with open('listOfTweetsExample.txt') as f:
     # iterating over the lines
